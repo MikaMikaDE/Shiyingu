@@ -1,8 +1,6 @@
 const gallery   = document.getElementById("img-gallery" );
 const sentinel  = document.getElementById("inf-sentinel");
-let   nextIndex = 1;
-let   loading   = false;
-let   config;
+let   config, observer, nextIndex, loading;
 
 /*config for loadBatch:*/
 //const config   = {
@@ -14,10 +12,19 @@ let   config;
 
 export function setGalleryConfig(newConfig) { 
   gallery.innerHTML = "";
-  config = newConfig; 
+  nextIndex = 1;
+  loading   = false;
+  config    = newConfig; 
+  observer  = new IntersectionObserver(
+    entries => entries.some(e => e.isIntersecting) && loadGalleryBatch(),
+    { root: null, rootMargin: "0px 0px 800px 0px", threshold: 0 }
+  );
+  observer.observe(sentinel);
 }
 
+
 export function loadGalleryBatch() {
+  if (!config) throw new Error("Unknown config!");
   if (loading) return; else loading = true;
   const endExclusive = Math.min(nextIndex + config.batchSize, config.count + 1);
   const frag         = document.createDocumentFragment();
@@ -31,7 +38,7 @@ export function loadGalleryBatch() {
   nextIndex = endExclusive;
   loading   = false;
 
-  if (nextIndex > config.count) { // done when we've stepped past the last image
+  if (nextIndex > config.count) {
     observer.disconnect();
     sentinel.style.display = "none";
   }
@@ -53,22 +60,9 @@ function genImageCard(url) {
 }
 
 
-const observer = new IntersectionObserver(
-  entries => entries.some(e => e.isIntersecting) && loadGalleryBatch(),
-  { root: null, rootMargin: "0px 0px 800px 0px", threshold: 0 }
-);
-observer.observe(sentinel);
-
-
-
-
-
-
-const dia    = document.createElement("dialog");
+const dia = document.createElement("dialog");
 document.body.appendChild(dia);
-dia.addEventListener("click", ()=>{
-  dia.close();
-});
+dia.addEventListener("click", ()=>dia.close());
 function closerLook(image) {
   dia.style.backgroundImage = `url("${image.src}")`;
   dia.showModal();

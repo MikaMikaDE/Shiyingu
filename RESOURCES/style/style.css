@@ -16,6 +16,7 @@
 body {
   margin: 0; padding: 0;
   background-color: var(--col-beige-light);
+  min-height: 200vh;
 }
 
 header {
@@ -45,17 +46,23 @@ header {
         color: var(--col-red-light);
         text-shadow: 0px 1px 2px var(--col-red-dark);
         transition: text-shadow 0.1s;
-        user-select: none;
+        cursor: pointer;
       }
+    }
+    .activePage {
+      font-weight: 500;
+      font-size: 2.5em;
     }
   }
 }
+
 main {
   background-color: var(--col-beige-light);
 }
 footer{
   background-color: var(--col-beige-dark);
 }
+
 dialog {
   margin: 0;
   padding: 0;
@@ -98,11 +105,10 @@ dialog {
 
 
 #sentinel{
-  display: grid;
+  display    : grid;
+  padding    : 1rem 0 3rem;
   place-items: center;
-  padding: 1rem 0 3rem;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
 .spinner{
   width : 28px; 
   height: 28px;
@@ -111,4 +117,4 @@ dialog {
   border-top-color  : rgba(0,0,0,.3);
   border-right-color: rgba(0,0,0,.3);
   animation: spin 0.7s linear infinite;
-}
+} @keyframes spin { to { transform: rotate(360deg); } }
